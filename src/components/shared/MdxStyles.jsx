@@ -7,6 +7,7 @@ export default function MdxStyles() {
 }
 
 export const styles = `
+  .mdx-content h1:first-child { display: none; }
   .mdx-content h2 {
     font-family: var(--font-heading), sans-serif;
     font-weight: 700;
