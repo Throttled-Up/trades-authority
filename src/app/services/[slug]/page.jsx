@@ -42,6 +42,18 @@ export default async function ServicePage({ params }) {
   const imgBySlot = slot => images.find(i => i.slot === slot) ?? null;
   const heroImg = imgBySlot('hero');
 
+  // Strip "| Business Name | Tagline" suffix from h1 (meta title convention)
+  const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
+
+  // Section images — always show 2 placeholder slots if none generated yet
+  const sectionImages = images.filter(i => i.slot !== 'hero');
+  const displaySectionImages = sectionImages.length > 0
+    ? sectionImages
+    : [
+        { slot: 'section_1', url: null, alt: '', aspect: '4:3' },
+        { slot: 'section_2', url: null, alt: '', aspect: '4:3' },
+      ];
+
   // FAQ items from frontmatter
   const faqItems = fm.faq ?? [];
 
@@ -63,51 +75,44 @@ export default async function ServicePage({ params }) {
           <Breadcrumb items={breadcrumbs} domain={config.domain} />
         </div>
 
-        {/* Hero image — full bleed 16:9 */}
-        {heroImg?.url && (
-          <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
-            <ContentImage
-              slot="hero"
-              url={heroImg.url}
-              alt={heroImg.alt}
-              aspect="16:9"
-              className=""
-            />
+        {/* Hero — real image or dark placeholder */}
+        <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
+          {heroImg?.url ? (
+            <>
+              <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" className="" />
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(to right, rgba(15,15,15,0.85) 0%, rgba(15,15,15,0.4) 60%)',
+              }} />
+            </>
+          ) : (
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(to right, rgba(15,15,15,0.85) 0%, rgba(15,15,15,0.4) 60%)',
-            }} />
-            <div
-              className="container"
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '100%',
-                paddingBottom: 40,
-              }}
-            >
-              <h1
-                style={{
-                  fontFamily: 'var(--font-heading), sans-serif',
-                  fontWeight: 800,
-                  fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
-                  color: '#fff',
-                  lineHeight: 1.15,
-                  maxWidth: 680,
-                }}
-              >
-                {fm.h1}
-              </h1>
+              background: 'linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
             </div>
-          </div>
-        )}
-
-        {/* No hero image fallback */}
-        {!heroImg?.url && (
-          <div className="container" style={{ paddingBottom: 48 }}>
+          )}
+          <div
+            className="container"
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100%',
+              paddingBottom: 40,
+            }}
+          >
             <h1
               style={{
                 fontFamily: 'var(--font-heading), sans-serif',
@@ -115,15 +120,13 @@ export default async function ServicePage({ params }) {
                 fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
                 color: '#fff',
                 lineHeight: 1.15,
-                paddingTop: 8,
-                paddingBottom: 16,
-                maxWidth: 720,
+                maxWidth: 680,
               }}
             >
-              {fm.h1}
+              {displayH1}
             </h1>
           </div>
-        )}
+        </div>
       </div>
 
       {/* ── Content + sidebar layout ───────────────────────────────────── */}
@@ -156,32 +159,28 @@ export default async function ServicePage({ params }) {
         </div>
       </div>
 
-      {/* ── Section images interspersed ───────────────────────────────── */}
-      {images.filter(i => i.slot !== 'hero' && i.url).length > 0 && (
-        <div className="section-pad-sm bg-surface-2">
-          <div className="container">
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-                gap: 20,
-              }}
-            >
-              {images
-                .filter(i => i.slot !== 'hero' && i.url)
-                .map(img => (
-                  <ContentImage
-                    key={img.slot}
-                    slot={img.slot}
-                    url={img.url}
-                    alt={img.alt}
-                    aspect={img.aspect}
-                  />
-                ))}
-            </div>
+      {/* ── Section images ────────────────────────────────────────────── */}
+      <div className="section-pad-sm bg-surface-2">
+        <div className="container">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: 20,
+            }}
+          >
+            {displaySectionImages.map(img => (
+              <ContentImage
+                key={img.slot}
+                slot={img.slot}
+                url={img.url}
+                alt={img.alt}
+                aspect={img.aspect ?? '4:3'}
+              />
+            ))}
           </div>
         </div>
-      )}
+      </div>
 
       {/* ── FAQ ───────────────────────────────────────────────────────── */}
       <FAQ items={faqItems} />

@@ -43,6 +43,18 @@ export default async function LocationPage({ params }) {
   const heroImg   = imgBySlot('hero');
   const faqItems  = fm.faq ?? [];
 
+  // Strip "| Business Name | Tagline" suffix from h1
+  const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
+
+  // Section images — always show 2 placeholders if none generated yet
+  const sectionImages = images.filter(i => i.slot !== 'hero');
+  const displaySectionImages = sectionImages.length > 0
+    ? sectionImages.slice(0, 2)
+    : [
+        { slot: 'section_1', url: null, alt: '', aspect: '4:3' },
+        { slot: 'section_2', url: null, alt: '', aspect: '4:3' },
+      ];
+
   // Services offered in this city — link to service pages
   const cityServices = config.services ?? [];
 
@@ -62,22 +74,36 @@ export default async function LocationPage({ params }) {
           <Breadcrumb items={breadcrumbs} domain={config.domain} />
         </div>
 
-        {heroImg?.url ? (
-          <div style={{ position: 'relative', height: 360, overflow: 'hidden' }}>
-            <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" />
+        {/* Hero — real image or dark placeholder */}
+        <div style={{ position: 'relative', height: 360, overflow: 'hidden' }}>
+          {heroImg?.url ? (
+            <>
+              <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" />
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(to right, rgba(15,15,15,0.88) 0%, rgba(15,15,15,0.4) 60%)',
+              }} />
+            </>
+          ) : (
             <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to right, rgba(15,15,15,0.88) 0%, rgba(15,15,15,0.4) 60%)',
-            }} />
-            <div className="container" style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', paddingBottom: 36 }}>
-              <LocationHeroText fm={fm} config={config} />
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
             </div>
+          )}
+          <div className="container" style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', paddingBottom: 36 }}>
+            <LocationHeroText displayH1={displayH1} config={config} />
           </div>
-        ) : (
-          <div className="container" style={{ paddingBottom: 48 }}>
-            <LocationHeroText fm={fm} config={config} />
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Main content */}
@@ -102,22 +128,17 @@ export default async function LocationPage({ params }) {
         </div>
       </div>
 
-      {/* Section images */}
-      {images.filter(i => i.slot !== 'hero' && i.url).length > 0 && (
-        <div className="section-pad-sm bg-surface-2">
-          <div
-            className="container"
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}
-          >
-            {images
-              .filter(i => i.slot !== 'hero' && i.url)
-              .slice(0, 2)
-              .map(img => (
-                <ContentImage key={img.slot} slot={img.slot} url={img.url} alt={img.alt} aspect="4:3" />
-              ))}
-          </div>
+      {/* Section images — always show 2 slots (placeholders until generated) */}
+      <div className="section-pad-sm bg-surface-2">
+        <div
+          className="container"
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}
+        >
+          {displaySectionImages.map(img => (
+            <ContentImage key={img.slot} slot={img.slot} url={img.url} alt={img.alt} aspect="4:3" />
+          ))}
         </div>
-      )}
+      </div>
 
       {/* FAQ */}
       <FAQ items={faqItems} />
@@ -133,7 +154,7 @@ export default async function LocationPage({ params }) {
   );
 }
 
-function LocationHeroText({ fm, config }) {
+function LocationHeroText({ displayH1, config }) {
   return (
     <>
       <h1
@@ -147,7 +168,7 @@ function LocationHeroText({ fm, config }) {
           paddingTop: 8,
         }}
       >
-        {fm.h1}
+        {displayH1}
       </h1>
       {config.phone && (
         <a
