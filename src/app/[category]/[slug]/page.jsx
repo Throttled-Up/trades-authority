@@ -81,6 +81,16 @@ export default async function HubPage({ params }) {
   const heroImg   = imgBySlot('hero');
   const faqItems  = fm.faq ?? [];
 
+  const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
+
+  const sectionImages = images.filter(i => i.slot !== 'hero');
+  const displaySectionImages = sectionImages.length > 0
+    ? sectionImages
+    : [
+        { slot: 'section_1', url: null, alt: '', aspect: '4:3' },
+        { slot: 'section_2', url: null, alt: '', aspect: '4:3' },
+      ];
+
   const hub = (config.hubs ?? []).find(h => h.slug === category);
 
   const breadcrumbs = [
@@ -98,23 +108,31 @@ export default async function HubPage({ params }) {
           <Breadcrumb items={breadcrumbs} domain={config.domain} />
         </div>
 
-        {heroImg?.url ? (
-          <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
-            <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(15,15,15,0.85) 0%, rgba(15,15,15,0.4) 60%)' }} />
-            <div className="container" style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', paddingBottom: 40 }}>
-              <h1 style={{ fontFamily: 'var(--font-heading), sans-serif', fontWeight: 800, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', color: '#fff', lineHeight: 1.15, maxWidth: 680 }}>
-                {fm.h1}
-              </h1>
+        <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
+          {heroImg?.url ? (
+            <>
+              <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(15,15,15,0.85) 0%, rgba(15,15,15,0.4) 60%)' }} />
+            </>
+          ) : (
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
             </div>
-          </div>
-        ) : (
-          <div className="container" style={{ paddingBottom: 48 }}>
-            <h1 style={{ fontFamily: 'var(--font-heading), sans-serif', fontWeight: 800, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', color: '#fff', lineHeight: 1.15, paddingTop: 8, paddingBottom: 16 }}>
-              {fm.h1}
+          )}
+          <div className="container" style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', paddingBottom: 40 }}>
+            <h1 style={{ fontFamily: 'var(--font-heading), sans-serif', fontWeight: 800, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', color: '#fff', lineHeight: 1.15, maxWidth: 680 }}>
+              {displayH1}
             </h1>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="section-pad bg-surface">
@@ -128,15 +146,13 @@ export default async function HubPage({ params }) {
         </div>
       </div>
 
-      {images.filter(i => i.slot !== 'hero' && i.url).length > 0 && (
-        <div className="section-pad-sm bg-surface-2">
-          <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
-            {images.filter(i => i.slot !== 'hero' && i.url).map(img => (
-              <ContentImage key={img.slot} slot={img.slot} url={img.url} alt={img.alt} aspect={img.aspect} />
-            ))}
-          </div>
+      <div className="section-pad-sm bg-surface-2">
+        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
+          {displaySectionImages.map(img => (
+            <ContentImage key={img.slot} slot={img.slot} url={img.url} alt={img.alt} aspect={img.aspect ?? '4:3'} />
+          ))}
         </div>
-      )}
+      </div>
 
       <FAQ items={faqItems} />
       <EmergencyCTA config={config} />
