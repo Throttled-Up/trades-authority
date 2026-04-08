@@ -1,0 +1,122 @@
+{
+  "_comment": "Copy this to site.config.json and fill in client data. Never commit site.config.json.",
+
+  "business_name":   "RightWay Pest Control",
+  "tagline":         "Jacksonville's Name in Pest Control",
+  "wp_title_tagline":"Jacksonville's Trusted Pest Control",
+  "owner_name":      "Mike Johnson",
+  "domain":          "rightwaypest.com",
+  "primary_color":   "#2563eb",
+  "skin":            "trades-authority",
+
+  "phone":   "(904) 555-0123",
+  "email":   "info@rightwaypest.com",
+  "address": {
+    "street": "123 Main St",
+    "city":   "Jacksonville",
+    "state":  "FL",
+    "zip":    "32201"
+  },
+
+  "city":   "Jacksonville",
+  "state":  "FL",
+  "license":"PCO-FL-12345",
+
+  "gbp_primary_category": "Pest Control Service",
+  "emergency_available":  true,
+  "hours":                "Mon–Fri 7am–6pm, Sat 8am–2pm",
+
+  "meta_description_default": "RightWay Pest Control serves Jacksonville FL and surrounding areas. Licensed pest control — call for a same-day estimate.",
+
+  "stats": {
+    "years_in_business": 12,
+    "jobs_completed":    3200,
+    "avg_rating":        4.9,
+    "review_count":      847,
+    "response_time":     "Same Day"
+  },
+
+  "social": {
+    "facebook":  "https://facebook.com/rightwaypest",
+    "instagram": null,
+    "google":    "https://g.page/rightwaypest"
+  },
+
+  "hero_headline":    "Pest Control Jacksonville Trusts",
+  "hero_subheadline": "Licensed, same-day service across Jacksonville and surrounding counties. Call before noon — we're there today.",
+
+  "about_short": "RightWay Pest Control was founded in 2012 by Mike Johnson after 10 years working for national pest control chains. The goal was simple: build a local company that actually shows up on time and treats the problem right the first time.",
+
+  "hubs": [
+    {
+      "slug":        "termite-control",
+      "name":        "Termite Control",
+      "description": "Comprehensive termite inspection, treatment, and prevention services in Jacksonville and NE Florida."
+    }
+  ],
+
+  "services": [
+    { "name": "General Pest Control",  "slug": "general-pest-control",  "hub": null,             "description": "Monthly and quarterly treatment plans for ants, roaches, spiders, and more." },
+    { "name": "Termite Inspection",    "slug": "termite-inspection",     "hub": "termite-control","description": "WDO inspection reports accepted by lenders and real estate closings." },
+    { "name": "Termite Treatment",     "slug": "termite-treatment",      "hub": "termite-control","description": "Liquid barrier and bait station termite treatment with transferable warranty." },
+    { "name": "Mosquito Control",      "slug": "mosquito-control",       "hub": null,             "description": "Seasonal barrier spray programs for backyard mosquito reduction." },
+    { "name": "Rodent Exclusion",      "slug": "rodent-exclusion",       "hub": null,             "description": "Seal entry points and remove existing infestations — no poison traps near pets." },
+    { "name": "Bed Bug Treatment",     "slug": "bed-bug-treatment",      "hub": null,             "description": "Heat treatment and chemical options with follow-up inspection." }
+  ],
+
+  "service_areas": [
+    "Jacksonville",
+    "Orange Park",
+    "Fleming Island",
+    "Middleburg",
+    "Ponte Vedra",
+    "St. Augustine",
+    "Yulee",
+    "Fernandina Beach"
+  ],
+
+  "differentiators": [
+    {
+      "title":       "Same-Day Service",
+      "description": "Call before noon and we're there today. No 3-day windows, no excuses."
+    },
+    {
+      "title":       "Licensed & Insured",
+      "description": "FL PCO license PCO-FL-12345, fully bonded. All technicians are state-certified."
+    },
+    {
+      "title":       "30-Day Satisfaction Guarantee",
+      "description": "If pests return within 30 days of treatment, we re-treat at no charge."
+    }
+  ],
+
+  "process_steps": [
+    { "step": 1, "title": "Call or Book Online",  "description": "Reach us by phone, text, or our online form. No automated systems — a real person picks up." },
+    { "step": 2, "title": "Free Inspection",      "description": "A licensed technician visits your property, identifies the problem, and walks you through the options." },
+    { "step": 3, "title": "Same-Day Treatment",   "description": "We treat immediately in most cases — no waiting a week for a second appointment." },
+    { "step": 4, "title": "Guaranteed Follow-Up", "description": "We schedule a check-in and re-treat free if the problem persists within 30 days." }
+  ],
+
+  "testimonials": [
+    {
+      "name":   "Sarah R.",
+      "city":   "Orange Park, FL",
+      "quote":  "Called at 9am about a roach problem and they were at my house by noon. The technician was thorough and explained everything. Haven't seen a roach since.",
+      "rating": 5
+    },
+    {
+      "name":   "Tom K.",
+      "city":   "Middleburg, FL",
+      "quote":  "Best pest control company I've used in 15 years of homeownership. They actually show up when they say they will.",
+      "rating": 5
+    },
+    {
+      "name":   "Angela M.",
+      "city":   "Fleming Island, FL",
+      "quote":  "Mike's team handled our termite situation quickly and the price was fair. The warranty gives me real peace of mind.",
+      "rating": 5
+    }
+  ],
+
+  "gallery_items": []
+}

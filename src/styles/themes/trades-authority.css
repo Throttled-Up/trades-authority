@@ -1,0 +1,45 @@
+/*
+ * Trades Authority skin — dark hero, bold, high contrast
+ * Target niches: excavation, septic, demolition, land clearing, roofing
+ *
+ * Swap this file for a different skin file to change the entire visual identity.
+ * --color-primary is overwritten at build time from site.config.json.
+ */
+
+:root {
+  /* Brand accent — overwritten per client at build time */
+  --color-primary:      #e8520a;
+  --color-primary-dark: #c44208;
+
+  /* Section backgrounds */
+  --color-hero-bg:   #0f0f0f;
+  --color-surface:   #ffffff;
+  --color-surface-2: #f4f4f4;
+  --color-footer-bg: #111111;
+
+  /* Text */
+  --color-text-heading: #1a1a1a;
+  --color-text-body:    #4a4a4a;
+  --color-text-muted:   #8a8a8a;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border: #e2e2e2;
+
+  /* Cards */
+  --radius-card:  8px;
+  --shadow-card:  0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 6px 24px rgba(0, 0, 0, 0.14);
+
+  /* Layout */
+  --max-width-content: 1200px;
+  --section-padding-y: 80px;
+  --section-padding-y-sm: 48px;
+
+  /* Top bar */
+  --color-topbar-bg:   #1a1a1a;
+  --color-topbar-text: #d4d4d4;
+
+  /* Buttons */
+  --btn-radius: 4px;
+}

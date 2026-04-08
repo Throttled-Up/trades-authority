@@ -1,0 +1,17 @@
+# Client config — never commit
+site.config.json
+
+# Next.js
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Env
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
