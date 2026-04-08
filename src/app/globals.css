@@ -154,6 +154,18 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   color: #fff !important;
 }
 
+/* ── Sticky mobile call bar — hidden on desktop ──────────────────────────── */
+.sticky-call-bar { display: flex; }
+
+@media (min-width: 768px) {
+  .sticky-call-bar { display: none; }
+}
+
+/* Add bottom padding to body on mobile so content isn't hidden behind the bar */
+@media (max-width: 767px) {
+  body { padding-bottom: 58px; }
+}
+
 /* ── Alternating section backgrounds ─────────────────────────────────────── */
 .bg-surface   { background: var(--color-surface); }
 .bg-surface-2 { background: var(--color-surface-2); }

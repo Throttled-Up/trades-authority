@@ -3,6 +3,7 @@ import { getSiteConfig, getPrimaryColorStyle } from '@/lib/site-config';
 import Nav from '@/components/layout/Nav';
 import TopBar from '@/components/layout/TopBar';
 import Footer from '@/components/layout/Footer';
+import StickyCallBar from '@/components/layout/StickyCallBar';
 import '@/styles/themes/trades-authority.css';
 import './globals.css';
 
@@ -45,6 +46,7 @@ export default function RootLayout({ children }) {
         <Nav config={config} />
         <main>{children}</main>
         <Footer config={config} />
+        <StickyCallBar config={config} />
       </body>
     </html>
   );
