@@ -57,6 +57,80 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   padding-block: var(--section-padding-y-sm);
 }
 
+/* ── Mobile section padding override ────────────────────────────────────── */
+@media (max-width: 767px) {
+  .section-pad    { padding-block: 52px; }
+  .section-pad-sm { padding-block: 32px; }
+}
+
+/* ── TopBar: hidden on mobile (sticky call bar covers phone) ─────────────── */
+.topbar { display: block; }
+@media (max-width: 767px) { .topbar { display: none; } }
+
+/* ── Stats: 2×2 grid on mobile ───────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+@media (min-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.stat-item {
+  padding: 24px 16px;
+  border-right: 1px solid rgba(255,255,255,0.25);
+  border-bottom: none;
+}
+.stat-item:last-child { border-right: none; }
+@media (max-width: 767px) {
+  .stat-item:nth-child(2n)   { border-right: none; }
+  .stat-item:nth-child(2n+1) { border-right: 1px solid rgba(255,255,255,0.25); }
+  .stat-item:nth-child(1),
+  .stat-item:nth-child(2)    { border-bottom: 1px solid rgba(255,255,255,0.15); }
+}
+
+/* ── Process: 2-col on mobile, hide connector line ───────────────────────── */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px 16px;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .process-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
+}
+.process-connector { display: none; }
+@media (min-width: 768px) { .process-connector { display: block; } }
+
+/* ── EmergencyCTA: stack + full-width button on mobile ───────────────────── */
+.emergency-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .emergency-inner { justify-content: space-between; text-align: left; }
+}
+.emergency-btn { width: 100%; justify-content: center; }
+@media (min-width: 768px) { .emergency-btn { width: auto; } }
+
+/* ── SocialProof: hide divider on mobile ─────────────────────────────────── */
+.social-divider { display: none; }
+@media (min-width: 768px) { .social-divider { display: block; } }
+
+/* ── Nav: shrink business name on small screens ──────────────────────────── */
+.nav-biz-name { font-size: 0.9375rem; }
+@media (min-width: 640px) { .nav-biz-name { font-size: 1.125rem; } }
+
+/* ── Hero: full-width CTAs on very small screens ─────────────────────────── */
+@media (max-width: 480px) {
+  .hero-cta-group { flex-direction: column; }
+  .hero-cta-group > * { width: 100%; justify-content: center; text-align: center; }
+}
+
 /* ── Button base ─────────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;

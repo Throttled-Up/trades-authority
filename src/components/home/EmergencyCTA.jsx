@@ -22,53 +22,47 @@ export default function EmergencyCTA({ config }) {
         padding: '48px 0',
       }}
     >
-      <div
-        className="container"
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 24,
-        }}
-      >
-        <div>
-          <h2
+      <div className="container">
+        <div className="emergency-inner">
+          <div>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), sans-serif',
+                fontWeight: 800,
+                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                color: '#fff',
+                marginBottom: 6,
+              }}
+            >
+              {headline}
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1rem' }}>
+              {sub}
+            </p>
+          </div>
+
+          <a
+            href={`tel:${phone.replace(/\D/g, '')}`}
+            className="emergency-btn"
             style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+              background: '#fff',
+              color: 'var(--color-primary)',
               fontFamily: 'var(--font-heading), sans-serif',
               fontWeight: 800,
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              color: '#fff',
-              marginBottom: 6,
+              fontSize: 'clamp(1.125rem, 2.5vw, 1.375rem)',
+              padding: '14px 32px',
+              borderRadius: 'var(--btn-radius)',
+              flexShrink: 0,
+              textDecoration: 'none',
             }}
           >
-            {headline}
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1rem' }}>
-            {sub}
-          </p>
+            <PhoneIcon />
+            {phone}
+          </a>
         </div>
-
-        <a
-          href={`tel:${phone.replace(/\D/g, '')}`}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
-            background: '#fff',
-            color: 'var(--color-primary)',
-            fontFamily: 'var(--font-heading), sans-serif',
-            fontWeight: 800,
-            fontSize: 'clamp(1.125rem, 2.5vw, 1.375rem)',
-            padding: '14px 32px',
-            borderRadius: 'var(--btn-radius)',
-            flexShrink: 0,
-            textDecoration: 'none',
-          }}
-        >
-          <PhoneIcon />
-          {phone}
-        </a>
       </div>
     </section>
   );

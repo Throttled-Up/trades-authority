@@ -40,15 +40,9 @@ export default function Stats({ config }) {
   return (
     <section style={{ background: 'var(--color-primary)' }}>
       <div className="container" style={{ paddingBlock: 40 }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${Math.min(items.length, 4)}, 1fr)`,
-            gap: 0,
-          }}
-        >
+        <div className="stats-grid">
           {items.map((item, i) => (
-            <StatItem key={i} item={item} isLast={i === items.length - 1} />
+            <StatItem key={i} item={item} />
           ))}
         </div>
       </div>
@@ -56,7 +50,7 @@ export default function Stats({ config }) {
   );
 }
 
-function StatItem({ item, isLast }) {
+function StatItem({ item }) {
   const [displayed, setDisplayed] = useState(0);
   const [started, setStarted]     = useState(false);
   const ref = useRef(null);
@@ -85,14 +79,7 @@ function StatItem({ item, isLast }) {
       : displayed.toLocaleString();
 
   return (
-    <div
-      ref={ref}
-      style={{
-        textAlign: 'center',
-        padding: '0 24px',
-        borderRight: !isLast ? '1px solid rgba(255,255,255,0.25)' : 'none',
-      }}
-    >
+    <div ref={ref} className="stat-item" style={{ textAlign: 'center' }}>
       <div
         style={{
           fontFamily: 'var(--font-heading), sans-serif',

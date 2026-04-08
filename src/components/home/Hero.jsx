@@ -98,7 +98,7 @@ export default function Hero({ config, heroImage }) {
         </p>
 
         {/* Dual CTA */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+        <div className="hero-cta-group" style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
           {phone && (
             <a
               href={`tel:${phone.replace(/\D/g, '')}`}

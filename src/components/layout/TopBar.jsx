@@ -4,6 +4,7 @@ export default function TopBar({ config }) {
 
   return (
     <div
+      className="topbar"
       style={{
         background: 'var(--color-topbar-bg)',
         color: 'var(--color-topbar-text)',

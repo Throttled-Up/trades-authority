@@ -51,10 +51,10 @@ export default function Nav({ config }) {
         {/* Logo / Business Name */}
         <Link
           href="/"
+          className="nav-biz-name"
           style={{
             fontFamily: 'var(--font-heading), sans-serif',
             fontWeight: 800,
-            fontSize: '1.125rem',
             color: '#fff',
             letterSpacing: '-0.01em',
             flexShrink: 0,

@@ -16,17 +16,11 @@ export default function Process({ config }) {
           </h2>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${Math.min(process_steps.length, 4)}, 1fr)`,
-            gap: 0,
-            position: 'relative',
-          }}
-        >
+        <div className="process-grid">
           {/* Connector line behind steps */}
           {process_steps.length > 1 && (
             <div
+              className="process-connector"
               style={{
                 position: 'absolute',
                 top: 28,

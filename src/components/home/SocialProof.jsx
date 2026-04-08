@@ -53,6 +53,7 @@ export default function SocialProof({ config }) {
         </div>
 
         <div
+          className="social-divider"
           style={{
             width: 1,
             height: 28,
