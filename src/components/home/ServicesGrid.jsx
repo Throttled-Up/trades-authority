@@ -15,7 +15,7 @@ export default function ServicesGrid({ config }) {
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <span className="section-eyebrow">What We Do</span>
           <h2 className="section-title">
-            {gbp_primary_category ?? 'Our Services'}
+            Our Services
           </h2>
           <p className="section-lead" style={{ margin: '0 auto' }}>
             Professional service delivered on time, done right the first time.

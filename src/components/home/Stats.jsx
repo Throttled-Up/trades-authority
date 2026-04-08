@@ -38,7 +38,7 @@ export default function Stats({ config }) {
   if (items.length === 0) return null;
 
   return (
-    <section style={{ background: 'var(--color-primary)' }}>
+    <section style={{ background: '#1e2332' }}>
       <div className="container" style={{ paddingBlock: 40 }}>
         <div className="stats-grid">
           {items.map((item, i) => (
