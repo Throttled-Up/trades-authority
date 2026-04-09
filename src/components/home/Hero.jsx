@@ -13,10 +13,10 @@ export default function Hero({ config, heroImage }) {
 
   return (
     <section
+      className="hero-section"
       style={{
         position: 'relative',
         background: 'var(--color-hero-bg)',
-        minHeight: 560,
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
@@ -45,11 +45,10 @@ export default function Hero({ config, heroImage }) {
 
       {/* Content */}
       <div
-        className="container"
+        className="container hero-inner"
         style={{
           position: 'relative',
           zIndex: 2,
-          paddingBlock: '80px 80px',
           maxWidth: 720,
         }}
       >

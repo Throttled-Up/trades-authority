@@ -1,12 +1,10 @@
-/* Chassis globals — skin CSS vars are set in themes/*.css, loaded in layout.jsx */
+/* Chassis globals — skin CSS vars set in themes/*.css, loaded in layout.jsx */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ── Base reset ─────────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ── Base reset ───────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
@@ -15,6 +13,7 @@ html {
 
 body {
   margin: 0;
+  padding-bottom: 58px; /* room for sticky call bar; cleared on desktop */
   font-family: var(--font-body), sans-serif;
   color: var(--color-text-body);
   background: var(--color-surface);
@@ -30,12 +29,12 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
-p { margin: 0; }
-a { color: inherit; text-decoration: none; }
+p   { margin: 0; }
+a   { color: inherit; text-decoration: none; }
 img { display: block; }
 ul, ol { list-style: none; margin: 0; padding: 0; }
 
-/* ── Chassis utilities ───────────────────────────────────────────────────── */
+/* ── Container ────────────────────────────────────────────────────────── */
 .container {
   width: 100%;
   max-width: var(--max-width-content);
@@ -43,95 +42,105 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   padding-inline: 24px;
 }
 
-@media (min-width: 768px) {
-  .container {
-    padding-inline: 40px;
-  }
-}
+/* ── Section padding — mobile base ───────────────────────────────────── */
+.section-pad    { padding-block: 52px; }
+.section-pad-sm { padding-block: 32px; }
 
-.section-pad {
-  padding-block: var(--section-padding-y);
-}
+/* ── Hero section — min-height + inner content padding ───────────────── */
+.hero-section { min-height: 420px; }
+.hero-inner   { padding-block: 56px; }
 
-.section-pad-sm {
-  padding-block: var(--section-padding-y-sm);
-}
+/* ── Hero CTAs — stacked column on mobile ────────────────────────────── */
+.hero-cta-group       { display: flex; flex-direction: column; gap: 12px; }
+.hero-cta-group > *   { width: 100%; justify-content: center; text-align: center; }
 
-/* ── Mobile section padding override ────────────────────────────────────── */
-@media (max-width: 767px) {
-  .section-pad    { padding-block: 52px; }
-  .section-pad-sm { padding-block: 32px; }
-}
+/* ── TopBar — hidden on mobile (sticky call bar covers it) ───────────── */
+.topbar { display: none; }
 
-/* ── TopBar: hidden on mobile (sticky call bar covers phone) ─────────────── */
-.topbar { display: block; }
-@media (max-width: 767px) { .topbar { display: none; } }
+/* ── Nav visibility — desktop links off on mobile ────────────────────── */
+.hidden-mobile { display: none !important; }
+.show-mobile   { display: flex; }
 
-/* ── Stats: 2×2 grid on mobile ───────────────────────────────────────────── */
+/* ── Nav biz name — shrinks on narrow screens ────────────────────────── */
+.nav-biz-name { font-size: 0.9375rem; }
+
+/* ── Stats — 2×2 grid on mobile ──────────────────────────────────────── */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0;
 }
-@media (min-width: 768px) {
-  .stats-grid { grid-template-columns: repeat(4, 1fr); }
-}
-.stat-item {
-  padding: 24px 16px;
-  border-right: 1px solid rgba(255,255,255,0.25);
-  border-bottom: none;
-}
-.stat-item:last-child { border-right: none; }
-@media (max-width: 767px) {
-  .stat-item:nth-child(2n)   { border-right: none; }
-  .stat-item:nth-child(2n+1) { border-right: 1px solid rgba(255,255,255,0.25); }
-  .stat-item:nth-child(1),
-  .stat-item:nth-child(2)    { border-bottom: 1px solid rgba(255,255,255,0.15); }
-}
+.stat-item { padding: 24px 16px; text-align: center; }
+/* 2-col: right border between columns */
+.stat-item:nth-child(odd)  { border-right: 1px solid rgba(255,255,255,0.25); }
+/* 2-col: bottom border under first row only */
+.stat-item:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.15); }
 
-/* ── Process: 2-col on mobile, hide connector line ───────────────────────── */
+/* ── Process — 2-col on mobile, connector line hidden ────────────────── */
 .process-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 40px 16px;
   position: relative;
 }
-@media (min-width: 768px) {
-  .process-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
-}
 .process-connector { display: none; }
-@media (min-width: 768px) { .process-connector { display: block; } }
 
-/* ── EmergencyCTA: stack + full-width button on mobile ───────────────────── */
+/* ── EmergencyCTA — stacked column on mobile ─────────────────────────── */
 .emergency-inner {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   gap: 24px;
-  justify-content: center;
   text-align: center;
 }
-@media (min-width: 768px) {
-  .emergency-inner { justify-content: space-between; text-align: left; }
-}
 .emergency-btn { width: 100%; justify-content: center; }
-@media (min-width: 768px) { .emergency-btn { width: auto; } }
 
-/* ── SocialProof: hide divider on mobile ─────────────────────────────────── */
+/* ── SocialProof divider — hidden on mobile ──────────────────────────── */
 .social-divider { display: none; }
-@media (min-width: 768px) { .social-divider { display: block; } }
 
-/* ── Nav: shrink business name on small screens ──────────────────────────── */
-.nav-biz-name { font-size: 0.9375rem; }
+/* ── Sticky call bar — visible on mobile only ────────────────────────── */
+.sticky-call-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center;
+  width: 100%;
+}
+
+/* ══ Desktop enhancements (768px+) ══════════════════════════════════════ */
+@media (min-width: 768px) {
+  body             { padding-bottom: 0; }
+  .container       { padding-inline: 40px; }
+  .section-pad     { padding-block: var(--section-padding-y); }
+  .section-pad-sm  { padding-block: var(--section-padding-y-sm); }
+  .hero-section    { min-height: 560px; }
+  .hero-inner      { padding-block: 80px; }
+  .topbar          { display: block; }
+  .hidden-mobile         { display: flex !important; }
+  .btn.hidden-mobile     { display: inline-flex !important; }
+  .show-mobile           { display: none !important; }
+  .nav-biz-name          { font-size: 1.125rem; }
+  .stats-grid            { grid-template-columns: repeat(4, 1fr); }
+  /* reset mobile 2-col borders, set 4-col right-border pattern */
+  .stat-item:nth-child(n) { border: none; border-right: 1px solid rgba(255,255,255,0.25); }
+  .stat-item:last-child   { border-right: none; }
+  .process-grid           { grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .process-connector      { display: block; }
+  .emergency-inner        { flex-direction: row; align-items: center; justify-content: space-between; text-align: left; }
+  .emergency-btn          { width: auto; }
+  .social-divider         { display: block; }
+  .sticky-call-bar        { display: none !important; }
+}
+
+/* ── Hero CTAs become a row at 480px+ ────────────────────────────────── */
+@media (min-width: 480px) {
+  .hero-cta-group     { flex-direction: row; flex-wrap: wrap; }
+  .hero-cta-group > * { width: auto; }
+}
+
+/* ── Nav biz name full size at 640px+ ────────────────────────────────── */
 @media (min-width: 640px) { .nav-biz-name { font-size: 1.125rem; } }
 
-/* ── Hero: full-width CTAs on very small screens ─────────────────────────── */
-@media (max-width: 480px) {
-  .hero-cta-group { flex-direction: column; }
-  .hero-cta-group > * { width: 100%; justify-content: center; text-align: center; }
-}
-
-/* ── Button base ─────────────────────────────────────────────────────────── */
+/* ── Buttons ──────────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -146,36 +155,15 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   text-decoration: none;
   white-space: nowrap;
 }
-
 .btn:active { transform: translateY(1px); }
 
-.btn-primary {
-  background: var(--color-primary);
-  color: #fff;
-  padding: 14px 28px;
-  font-size: 1rem;
-}
-
+.btn-primary       { background: var(--color-primary); color: #fff; padding: 14px 28px; font-size: 1rem; }
 .btn-primary:hover { background: var(--color-primary-dark); }
+.btn-outline       { background: transparent; color: #fff; border: 2px solid #fff; padding: 12px 28px; font-size: 1rem; }
+.btn-outline:hover { background: rgba(255,255,255,0.12); }
+.btn-lg            { padding: 16px 36px; font-size: 1.125rem; }
 
-.btn-outline {
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
-  padding: 12px 28px;
-  font-size: 1rem;
-}
-
-.btn-outline:hover {
-  background: rgba(255,255,255,0.12);
-}
-
-.btn-lg {
-  padding: 16px 36px;
-  font-size: 1.125rem;
-}
-
-/* ── Section headings ────────────────────────────────────────────────────── */
+/* ── Section headings ────────────────────────────────────────────────── */
 .section-eyebrow {
   display: block;
   font-family: var(--font-heading), sans-serif;
@@ -186,78 +174,26 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   color: var(--color-primary);
   margin-bottom: 12px;
 }
+.section-title       { font-size: clamp(1.75rem, 3.5vw, 2.5rem); color: var(--color-text-heading); margin-bottom: 16px; }
+.section-title-light { color: #fff; }
+.section-lead        { font-size: 1.0625rem; color: var(--color-text-body); max-width: 600px; line-height: 1.7; }
 
-.section-title {
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  color: var(--color-text-heading);
-  margin-bottom: 16px;
-}
-
-.section-title-light {
-  color: #fff;
-}
-
-.section-lead {
-  font-size: 1.0625rem;
-  color: var(--color-text-body);
-  max-width: 600px;
-  line-height: 1.7;
-}
-
-/* ── Hover utilities — replaces JS onMouseEnter/Leave in Server Components ── */
-.card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.card-lift {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.card-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card-hover);
-}
-
+/* ── Hover utilities ─────────────────────────────────────────────────── */
+.card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card-hover:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); }
+.card-lift { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.card-lift:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
 .link-white:hover { color: #fff !important; }
+.pill-hover:hover { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
 
-.pill-hover:hover {
-  background: rgba(255,255,255,0.08) !important;
-  color: #fff !important;
-}
-
-/* ── Sticky mobile call bar — hidden on desktop ──────────────────────────── */
-.sticky-call-bar {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .sticky-call-bar { display: none !important; }
-}
-
-/* Add bottom padding to body on mobile so content isn't hidden behind the bar */
-@media (max-width: 767px) {
-  body { padding-bottom: 58px; }
-}
-
-/* ── Alternating section backgrounds ─────────────────────────────────────── */
+/* ── Section backgrounds ─────────────────────────────────────────────── */
 .bg-surface   { background: var(--color-surface); }
 .bg-surface-2 { background: var(--color-surface-2); }
 .bg-dark      { background: var(--color-hero-bg); }
 .bg-footer    { background: var(--color-footer-bg); }
 
-/* ── Aspect ratio boxes (image slots) ───────────────────────────────────── */
-.aspect-16-9 { position: relative; padding-top: 56.25%; }
-.aspect-4-3  { position: relative; padding-top: 75%; }
-.aspect-4-5  { position: relative; padding-top: 125%; }
-
-.aspect-inner {
-  position: absolute;
-  inset: 0;
-}
+/* ── Aspect ratio boxes (image slots) ───────────────────────────────── */
+.aspect-16-9  { position: relative; padding-top: 56.25%; }
+.aspect-4-3   { position: relative; padding-top: 75%; }
+.aspect-4-5   { position: relative; padding-top: 125%; }
+.aspect-inner { position: absolute; inset: 0; }

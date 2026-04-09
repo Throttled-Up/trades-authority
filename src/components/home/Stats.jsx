@@ -79,7 +79,7 @@ function StatItem({ item }) {
       : displayed.toLocaleString();
 
   return (
-    <div ref={ref} className="stat-item" style={{ textAlign: 'center' }}>
+    <div ref={ref} className="stat-item">
       <div
         style={{
           fontFamily: 'var(--font-heading), sans-serif',
