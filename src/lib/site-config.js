@@ -17,10 +17,17 @@ export function getSiteConfig() {
   try {
     raw = readFileSync(CONFIG_PATH, 'utf-8');
   } catch {
-    throw new Error(
-      '[trades-authority] site.config.json not found at project root. ' +
-      'Copy site.config.example.json and fill in your client data.'
-    );
+    // No site.config.json — bare template deploy. Return a minimal stub so
+    // generateStaticParams returns empty arrays and the build succeeds.
+    // Client repos always have this file written by configureClientRepo().
+    _cached = {
+      business_name: 'Trades Authority',
+      city: '', state: '', phone: '', primary_color: '#e8520a',
+      services: [], hubs: [], service_areas: [],
+      testimonials: [], process_steps: [], differentiators: [],
+      stats: {}, social: {},
+    };
+    return _cached;
   }
 
   try {
