@@ -71,15 +71,35 @@ export default async function HubPage({ params }) {
 
   const { frontmatter: fm, content } = page;
 
-  const { content: mdxContent } = await compileMDX({
-    source:  content,
-    options: { parseFrontmatter: false },
-  });
-
   const images    = fm.images ?? [];
   const imgBySlot = slot => images.find(i => i.slot === slot) ?? null;
   const heroImg   = imgBySlot('hero');
   const faqItems  = fm.faq ?? [];
+
+  // Inline prose components — hub child pages keep the sidebar layout,
+  // so MDX sections render as headed prose rather than full-width bands.
+  const mdxComponents = {
+    PageIntro: ({ children }) => (
+      <div className="section-band-prose" style={{ marginBottom: 28 }}>
+        {children}
+      </div>
+    ),
+    ServiceSection: ({ heading, children }) => (
+      <div style={{ marginBottom: 28 }}>
+        <h2 style={{ fontFamily: 'var(--font-heading), sans-serif', fontWeight: 700, fontSize: 'clamp(1.25rem, 2.5vw, 1.625rem)', color: 'var(--color-text-heading)', lineHeight: 1.25, marginBottom: 12 }}>
+          {heading}
+        </h2>
+        <div className="section-band-prose">{children}</div>
+      </div>
+    ),
+    FAQSection: () => null,
+  };
+
+  const { content: mdxContent } = await compileMDX({
+    source:     content,
+    options:    { parseFrontmatter: false },
+    components: mdxComponents,
+  });
 
   const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
 
@@ -140,7 +160,7 @@ export default async function HubPage({ params }) {
           <article className="mdx-content" style={{ fontSize: '1.0625rem', lineHeight: 1.75, color: 'var(--color-text-body)' }}>
             {mdxContent}
           </article>
-          <aside style={{ position: 'sticky', top: 90 }}>
+          <aside>
             <HubServiceSidebar config={config} hub={hub} />
           </aside>
         </div>
