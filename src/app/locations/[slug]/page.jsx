@@ -33,15 +33,35 @@ export default async function LocationPage({ params }) {
   const config = getSiteConfig();
   const { frontmatter: fm, content } = page;
 
-  const { content: mdxContent } = await compileMDX({
-    source:  content,
-    options: { parseFrontmatter: false },
-  });
-
   const images    = fm.images ?? [];
   const imgBySlot = slot => images.find(i => i.slot === slot) ?? null;
   const heroImg   = imgBySlot('hero');
   const faqItems  = fm.faq ?? [];
+
+  // Inline prose components — location pages keep the sidebar layout,
+  // so MDX section bands render as headed prose rather than full-width blocks.
+  const mdxComponents = {
+    PageIntro: ({ children }) => (
+      <div className="section-band-prose" style={{ marginBottom: 28 }}>
+        {children}
+      </div>
+    ),
+    ServiceSection: ({ heading, children }) => (
+      <div style={{ marginBottom: 28 }}>
+        <h2 style={{ fontFamily: 'var(--font-heading), sans-serif', fontWeight: 700, fontSize: 'clamp(1.25rem, 2.5vw, 1.625rem)', color: 'var(--color-text-heading)', lineHeight: 1.25, marginBottom: 12 }}>
+          {heading}
+        </h2>
+        <div className="section-band-prose">{children}</div>
+      </div>
+    ),
+    FAQSection: () => null,
+  };
+
+  const { content: mdxContent } = await compileMDX({
+    source:     content,
+    options:    { parseFrontmatter: false },
+    components: mdxComponents,
+  });
 
   // Strip "| Business Name | Tagline" suffix from h1
   const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
@@ -122,7 +142,7 @@ export default async function LocationPage({ params }) {
           </article>
 
           {/* Sidebar: services in this city */}
-          <aside style={{ position: 'sticky', top: 90 }}>
+          <aside>
             <LocationSidebar config={config} fm={fm} cityServices={cityServices} />
           </aside>
         </div>
