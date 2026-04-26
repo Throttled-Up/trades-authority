@@ -11,6 +11,7 @@ import './globals.css';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
 });
 
@@ -41,7 +42,7 @@ export default function RootLayout({ children }) {
         {/* Inject client brand color over the skin default */}
         <style dangerouslySetInnerHTML={{ __html: primaryColorStyle }} />
       </head>
-      <body style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
+      <body style={{ fontFamily: 'var(--font-body), sans-serif' }}>
         <TopBar config={config} />
         <Nav config={config} />
         <main>{children}</main>
