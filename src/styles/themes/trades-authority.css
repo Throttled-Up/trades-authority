@@ -17,22 +17,40 @@
   --color-surface-2: #f4f4f4;
   --color-footer-bg: #111111;
 
+  /* Anchor section — dark contrast bands (stats bar, phone banner, footer) */
+  --color-anchor: #111111;
+
   /* Text */
   --color-text-heading: #1a1a1a;
   --color-text-body:    #4a4a4a;
   --color-text-muted:   #8a8a8a;
   --color-text-inverse: #ffffff;
+  --color-text-link:    var(--color-primary);
 
   /* Borders */
-  --color-border: #e2e2e2;
+  --color-border:      #e2e2e2;
+  --color-border-focus: var(--color-primary);
 
-  /* Cards */
-  --radius-card:  8px;
-  --shadow-card:  0 2px 12px rgba(0, 0, 0, 0.08);
-  --shadow-card-hover: 0 6px 24px rgba(0, 0, 0, 0.14);
+  /* Radius */
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-full: 9999px;
+  --radius-card: var(--radius-lg);
+  --btn-radius:  var(--radius-md);
+
+  /* Shadows */
+  --shadow-sm:         0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:         0 4px 16px rgba(0, 0, 0, 0.10);
+  --shadow-lg:         0 12px 40px rgba(0, 0, 0, 0.14);
+  --shadow-card:       var(--shadow-md);
+  --shadow-card-hover: var(--shadow-lg);
+  --shadow-focus:      0 0 0 3px rgba(232, 82, 10, 0.30);
 
   /* Layout */
   --max-width-content: 1200px;
+  --max-width-text:    720px;
+  --max-width-wide:    1440px;
   --section-padding-y: 80px;
   --section-padding-y-sm: 48px;
 
@@ -40,6 +58,74 @@
   --color-topbar-bg:   #1a1a1a;
   --color-topbar-text: #d4d4d4;
 
-  /* Buttons */
-  --btn-radius: 4px;
+  /* Typography */
+  --font-heading: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-body:    var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-heading);
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Type scale */
+  --font-size-xs:   0.75rem;
+  --font-size-sm:   0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md:   1.125rem;
+  --font-size-lg:   1.25rem;
+  --font-size-xl:   1.5rem;
+  --font-size-2xl:  2rem;
+  --font-size-3xl:  2.75rem;
+  --font-size-4xl:  4rem;
+  --font-size-hero: clamp(2.5rem, 5.5vw, 4.5rem);
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+  --font-weight-black:    800;
+
+  --line-height-tight:   1.1;
+  --line-height-snug:    1.28;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.7;
+
+  --letter-spacing-tight:  -0.025em;
+  --letter-spacing-normal:  0em;
+  --letter-spacing-wide:    0.06em;
+
+  /* Spacing scale (8px base) */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   24px;
+  --space-6:   32px;
+  --space-7:   48px;
+  --space-8:   64px;
+  --space-9:   96px;
+  --space-10:  128px;
+  --space-11:  192px;
+  --space-12:  256px;
+
+  /* Motion */
+  --duration-fast:   150ms;
+  --duration-normal: 250ms;
+  --duration-slow:   400ms;
+  --easing-default:  cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-out:      cubic-bezier(0, 0, 0.2, 1);
+  --easing-in:       cubic-bezier(0.4, 0, 1, 1);
+
+  /* Nav */
+  --color-nav-bg:          rgba(15,15,15,0.82);
+  --color-nav-bg-scrolled: rgba(15,15,15,0.97);
+  --color-nav-text:        rgba(255,255,255,0.85);
+  --color-nav-text-hover:  rgba(255,255,255,1);
+  --color-nav-shadow:      0 2px 16px rgba(0,0,0,0.4);
+  --color-nav-mobile-bg:   rgba(15,15,15,0.97);
+  --color-nav-mobile-border: rgba(255,255,255,0.08);
+  --color-nav-mobile-link: rgba(255,255,255,0.85);
+  --color-nav-mobile-divider: rgba(255,255,255,0.06);
+
+  /* Extra surface / border vars */
+  --color-surface-3:  #ebebeb;
+  --color-border-dark: #c8c8c8;
+  --color-primary-light: rgba(232,82,10,0.12);
 }
