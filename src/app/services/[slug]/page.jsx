@@ -1,13 +1,14 @@
-import { notFound }        from 'next/navigation';
-import { compileMDX }      from 'next-mdx-remote/rsc';
+import { notFound }              from 'next/navigation';
+import { compileMDX }            from 'next-mdx-remote/rsc';
 import { getMdxPage, getMdxSlugs } from '@/lib/mdx';
-import { getSiteConfig }   from '@/lib/site-config';
-import ContentImage        from '@/components/shared/ContentImage';
-import SchemaScript        from '@/components/shared/SchemaScript';
-import Breadcrumb          from '@/components/shared/Breadcrumb';
-import FAQ                 from '@/components/service/FAQ';
-import EmergencyCTA        from '@/components/home/EmergencyCTA';
-import MdxStyles           from '@/components/shared/MdxStyles';
+import { getSiteConfig }         from '@/lib/site-config';
+import ContentImage              from '@/components/shared/ContentImage';
+import SchemaScript              from '@/components/shared/SchemaScript';
+import Breadcrumb                from '@/components/shared/Breadcrumb';
+import FAQ                       from '@/components/service/FAQ';
+import ServiceSectionBand        from '@/components/service/ServiceSectionBand';
+import PageIntro                 from '@/components/service/PageIntro';
+import EmergencyCTA              from '@/components/home/EmergencyCTA';
 
 export async function generateStaticParams() {
   return getMdxSlugs('services').map(slug => ({ slug }));
@@ -25,293 +26,150 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ServicePage({ params }) {
-  const { slug } = await params;
-  const page     = getMdxPage('services', slug);
+  const { slug }  = await params;
+  const page      = getMdxPage('services', slug);
   if (!page) notFound();
 
-  const config = getSiteConfig();
+  const config                = getSiteConfig();
   const { frontmatter: fm, content } = page;
 
-  const { content: mdxContent } = await compileMDX({
-    source:  content,
-    options: { parseFrontmatter: false },
-  });
+  // Build slot → image lookup from frontmatter images[]
+  const images     = fm.images ?? [];
+  const imgBySlot  = (slot) => images.find(i => i.slot === slot) ?? null;
+  const heroImg    = imgBySlot('hero');
 
-  // Image lookup helpers
-  const images  = fm.images ?? [];
-  const imgBySlot = slot => images.find(i => i.slot === slot) ?? null;
-  const heroImg = imgBySlot('hero');
-
-  // Strip "| Business Name | Tagline" suffix from h1 (meta title convention)
-  const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
-
-  // Section images — always show 2 placeholder slots if none generated yet
-  const sectionImages = images.filter(i => i.slot !== 'hero');
-  const displaySectionImages = sectionImages.length > 0
-    ? sectionImages
-    : [
-        { slot: 'section_1', url: null, alt: '', aspect: '4:3' },
-        { slot: 'section_2', url: null, alt: '', aspect: '4:3' },
-      ];
-
-  // FAQ items from frontmatter
+  // FAQ items from frontmatter (populated by PR builder from schema FAQPage node)
   const faqItems = fm.faq ?? [];
 
-  // Breadcrumb trail
+  // Section band index counter — incremented per <ServiceSection> render.
+  // Must be a mutable object so the closure inside components can increment it.
+  const sectionState = { index: 0 };
+
+  // MDX component map — names match what transformToMdxComponents() outputs
+  const components = {
+    PageIntro: ({ children }) => (
+      <PageIntro>{children}</PageIntro>
+    ),
+
+    ServiceSection: ({ slot, heading, children }) => {
+      const idx   = sectionState.index++;
+      const image = imgBySlot(slot);
+      return (
+        <ServiceSectionBand slot={slot} heading={heading} index={idx} image={image}>
+          {children}
+        </ServiceSectionBand>
+      );
+    },
+
+    FAQSection: () => <FAQ items={faqItems} />,
+  };
+
+  const { content: mdxContent } = await compileMDX({
+    source:     content,
+    options:    { parseFrontmatter: false },
+    components,
+  });
+
+  // Strip "| Business Name | Tagline" suffix — hero shows clean service + city
+  const displayH1 = (fm.h1 ?? '').split('|')[0].trim();
+
   const breadcrumbs = [
-    { label: 'Home', href: '/' },
+    { label: 'Home',     href: '/' },
     { label: 'Services', href: '/services' },
-    { label: fm.service_name ?? fm.h1 ?? slug },
+    { label: fm.service_name ?? displayH1 ?? slug },
   ];
 
   return (
     <>
-      {/* JSON-LD schema from content engine pass 5 */}
       <SchemaScript schema={fm.schema} />
 
-      {/* ── Page hero ─────────────────────────────────────────────────── */}
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
       <div style={{ background: 'var(--color-hero-bg)' }}>
         <div className="container" style={{ paddingTop: 40 }}>
           <Breadcrumb items={breadcrumbs} domain={config.domain} />
         </div>
 
-        {/* Hero — real image or dark placeholder */}
-        <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
+        <div style={{ position: 'relative', height: 460, overflow: 'hidden' }}>
           {heroImg?.url ? (
             <>
-              <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" className="" />
+              <ContentImage slot="hero" url={heroImg.url} alt={heroImg.alt} aspect="16:9" />
               <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(to right, rgba(15,15,15,0.85) 0%, rgba(15,15,15,0.4) 60%)',
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(to right, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.35) 65%)',
               }} />
             </>
           ) : (
             <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
-              </svg>
-            </div>
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            }} />
           )}
-          <div
-            className="container"
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '100%',
-              paddingBottom: 40,
-            }}
-          >
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading), sans-serif',
-                fontWeight: 800,
-                fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
-                color: '#fff',
-                lineHeight: 1.15,
-                maxWidth: 680,
-              }}
-            >
+
+          <div className="container" style={{
+            position: 'absolute', bottom: 0, left: '50%',
+            transform: 'translateX(-50%)', width: '100%', paddingBottom: 48,
+          }}>
+            <h1 style={{
+              fontFamily: 'var(--font-heading), sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(1.875rem, 4.5vw, 3rem)',
+              color: '#fff',
+              lineHeight: 1.1,
+              maxWidth: 700,
+              marginBottom: 24,
+            }}>
               {displayH1}
             </h1>
+
+            {config.phone && (
+              <a
+                href={`tel:${config.phone.replace(/\D/g, '')}`}
+                className="btn btn-primary btn-lg"
+              >
+                Call {config.phone}
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Trust bar — sits between hero and content */}
+        <div style={{ background: 'rgba(255,255,255,0.04)', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="container" style={{ paddingBlock: 16 }}>
+            <div className="service-trust-bar">
+              {config.stats?.avg_rating && (
+                <TrustItem icon="★" text={`${config.stats.avg_rating} (${config.stats.review_count ?? 0} reviews)`} />
+              )}
+              {config.license && (
+                <TrustItem icon="✓" text={`Licensed & Insured · ${config.license}`} />
+              )}
+              {config.stats?.years_in_business && (
+                <TrustItem icon="✓" text={`${config.stats.years_in_business}+ years serving ${config.city ?? fm.city}`} />
+              )}
+              {config.emergency_available && (
+                <TrustItem icon="⚡" text="Emergency service available" />
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Content + sidebar layout ───────────────────────────────────── */}
-      <div className="section-pad bg-surface">
-        <div
-          className="container"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr min(340px, 30%)',
-            gap: 48,
-            alignItems: 'start',
-          }}
-        >
-          {/* Main content column */}
-          <article
-            className="mdx-content"
-            style={{
-              fontSize: '1.0625rem',
-              lineHeight: 1.75,
-              color: 'var(--color-text-body)',
-            }}
-          >
-            {mdxContent}
-          </article>
-
-          {/* Sidebar */}
-          <aside style={{ position: 'sticky', top: 90 }}>
-            <ServiceSidebar config={config} fm={fm} />
-          </aside>
-        </div>
-      </div>
-
-      {/* ── Section images ────────────────────────────────────────────── */}
-      <div className="section-pad-sm bg-surface-2">
-        <div className="container">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: 20,
-            }}
-          >
-            {displaySectionImages.map(img => (
-              <ContentImage
-                key={img.slot}
-                slot={img.slot}
-                url={img.url}
-                alt={img.alt}
-                aspect={img.aspect ?? '4:3'}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── FAQ ───────────────────────────────────────────────────────── */}
-      <FAQ items={faqItems} />
+      {/* ── MDX sections — PageIntro + ServiceSection bands + FAQSection ── */}
+      {mdxContent}
 
       {/* ── Emergency CTA ─────────────────────────────────────────────── */}
       <EmergencyCTA config={config} />
-
-      <MdxStyles />
     </>
   );
 }
 
-function ServiceSidebar({ config, fm }) {
-  const { phone, business_name, stats = {}, license } = config;
-
+function TrustItem({ icon, text }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Contact card */}
-      <div
-        style={{
-          background: 'var(--color-primary)',
-          borderRadius: 'var(--radius-card)',
-          padding: 24,
-          color: '#fff',
-        }}
-      >
-        <h3
-          style={{
-            fontFamily: 'var(--font-heading), sans-serif',
-            fontWeight: 700,
-            fontSize: '1.125rem',
-            marginBottom: 8,
-          }}
-        >
-          Get a Free Estimate
-        </h3>
-        <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', marginBottom: 20 }}>
-          Call or text — we respond fast.
-        </p>
-        {phone && (
-          <a
-            href={`tel:${phone.replace(/\D/g, '')}`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              width: '100%',
-              background: '#fff',
-              color: 'var(--color-primary)',
-              fontFamily: 'var(--font-heading), sans-serif',
-              fontWeight: 700,
-              fontSize: '1.0625rem',
-              padding: '12px 16px',
-              borderRadius: 4,
-              textDecoration: 'none',
-              marginBottom: 12,
-            }}
-          >
-            {phone}
-          </a>
-        )}
-        <a
-          href="/contact"
-          style={{
-            display: 'block',
-            width: '100%',
-            textAlign: 'center',
-            color: 'rgba(255,255,255,0.85)',
-            fontSize: '0.875rem',
-            padding: '8px 0',
-            textDecoration: 'underline',
-          }}
-        >
-          Send a message instead
-        </a>
-      </div>
-
-      {/* Trust card */}
-      <div
-        style={{
-          background: '#f8f8f8',
-          border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-card)',
-          padding: 20,
-        }}
-      >
-        {[
-          license && `Licensed & Insured · ${license}`,
-          stats.avg_rating && `${stats.avg_rating}★ (${stats.review_count ?? 0} reviews)`,
-          stats.years_in_business && `${stats.years_in_business}+ years in business`,
-          config.emergency_available && 'Emergency service available',
-        ]
-          .filter(Boolean)
-          .map((item, i) => (
-            <div
-              key={i}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 10,
-                padding: '8px 0',
-                borderBottom: i < 3 ? '1px solid var(--color-border)' : 'none',
-                fontSize: '0.875rem',
-                color: 'var(--color-text-body)',
-              }}
-            >
-              <CheckIcon />
-              {item}
-            </div>
-          ))}
-      </div>
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 6,
+      fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)',
+    }}>
+      <span style={{ color: 'var(--color-primary)', fontSize: '1rem' }}>{icon}</span>
+      {text}
     </div>
   );
 }
-
-function CheckIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="var(--color-primary)"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ flexShrink: 0, marginTop: 1 }}
-    >
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
-  );
-}
-
