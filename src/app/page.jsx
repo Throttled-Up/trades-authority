@@ -2,7 +2,6 @@ import { compileMDX }  from 'next-mdx-remote/rsc';
 import { getSiteConfig } from '@/lib/site-config';
 import { getMdxPage }   from '@/lib/mdx';
 import Hero           from '@/components/home/Hero';
-import SocialProof    from '@/components/home/SocialProof';
 import Stats          from '@/components/home/Stats';
 import ServicesGrid   from '@/components/home/ServicesGrid';
 import WhyChooseUs    from '@/components/home/WhyChooseUs';
@@ -12,8 +11,9 @@ import Testimonials   from '@/components/home/Testimonials';
 import ServiceAreas   from '@/components/home/ServiceAreas';
 import EmergencyCTA   from '@/components/home/EmergencyCTA';
 import SchemaScript   from '@/components/shared/SchemaScript';
-import MdxStyles      from '@/components/shared/MdxStyles';
 import FAQ            from '@/components/service/FAQ';
+import ServiceSectionBand from '@/components/service/ServiceSectionBand';
+import PageIntro      from '@/components/service/PageIntro';
 
 export async function generateMetadata() {
   const config = getSiteConfig();
@@ -35,12 +35,30 @@ export default async function HomePage() {
   const homePage    = getMdxPage('services', 'homepage');
   const fm          = homePage?.frontmatter ?? {};
   const faqItems    = fm.faq ?? [];
+  const images      = fm.images ?? [];
+  const imgBySlot   = (slot) => images.find(i => i.slot === slot) ?? null;
+  const sectionState = { index: 0 };
+
+  const components = {
+    PageIntro: ({ children }) => <PageIntro>{children}</PageIntro>,
+    ServiceSection: ({ slot, heading, children }) => {
+      const idx   = sectionState.index++;
+      const image = imgBySlot(slot);
+      return (
+        <ServiceSectionBand slot={slot} heading={heading} index={idx} image={image}>
+          {children}
+        </ServiceSectionBand>
+      );
+    },
+    FAQSection: () => <FAQ items={faqItems} />,
+  };
 
   let mdxContent = null;
   if (homePage?.content) {
     const result = await compileMDX({
-      source:  homePage.content,
-      options: { parseFrontmatter: false },
+      source:     homePage.content,
+      options:    { parseFrontmatter: false },
+      components,
     });
     mdxContent = result.content;
   }
@@ -52,8 +70,6 @@ export default async function HomePage() {
       {/* 1. Hero — full bleed, H1, dual CTA */}
       <Hero config={config} heroImage={heroImage} />
 
-      {/* 2. Social proof strip — review count + stars */}
-      <SocialProof config={config} />
 
       {/* 3. Stats row — years / jobs / rating / response time */}
       <Stats config={config} />
@@ -61,48 +77,26 @@ export default async function HomePage() {
       {/* 4. Services grid — 3-col cards */}
       <ServicesGrid config={config} />
 
-      {/* 5. Homepage MDX prose — SEO content, service category intros, local signals */}
-      {mdxContent && (
-        <section className="section-pad bg-surface">
-          <div className="container">
-            <article
-              className="mdx-content"
-              style={{
-                fontSize:   '1.0625rem',
-                lineHeight: 1.75,
-                color:      'var(--color-text-body)',
-                maxWidth:   860,
-                margin:     '0 auto',
-              }}
-            >
-              {mdxContent}
-            </article>
-          </div>
-        </section>
-      )}
+      {/* 5. Homepage MDX — PageIntro + ServiceSection bands + FAQSection */}
+      {mdxContent}
 
-      {/* 6. FAQ — from homepage MDX frontmatter */}
-      {faqItems.length > 0 && <FAQ items={faqItems} />}
-
-      {/* 7. Why choose us — differentiator cards */}
+      {/* 6. Why choose us — differentiator cards */}
       <WhyChooseUs config={config} />
 
-      {/* 8. Process — numbered steps */}
+      {/* 7. Process — numbered steps */}
       <Process config={config} />
 
-      {/* 9. Project gallery */}
+      {/* 8. Project gallery */}
       <Gallery config={config} />
 
-      {/* 10. Testimonials */}
+      {/* 9. Testimonials */}
       <Testimonials config={config} />
 
-      {/* 11. Service areas geographic strip */}
+      {/* 10. Service areas geographic strip */}
       <ServiceAreas config={config} />
 
-      {/* 12. Emergency CTA band */}
+      {/* 11. Emergency CTA band */}
       <EmergencyCTA config={config} />
-
-      <MdxStyles />
     </>
   );
 }
