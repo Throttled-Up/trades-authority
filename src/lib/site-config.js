@@ -45,9 +45,18 @@ export function getSiteConfig() {
  */
 export function getPrimaryColorStyle(config) {
   const primary = config.primary_color ?? '#e8520a';
-  // naive 15% darkening — good enough for hover states without a color library
-  const dark = darken(primary, 0.15);
-  return `:root { --color-primary: ${primary}; --color-primary-dark: ${dark}; }`;
+  const dark    = darken(primary, 0.15);
+  const light   = hexToRgba(primary, 0.10);
+  return `:root { --color-primary: ${primary}; --color-primary-dark: ${dark}; --color-primary-light: ${light}; }`;
+}
+
+function hexToRgba(hex, alpha) {
+  const h = hex.replace('#', '');
+  if (h.length !== 6) return `rgba(0,0,0,${alpha})`;
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
 /** Very simple hex darkening — avoids pulling in a color library */
