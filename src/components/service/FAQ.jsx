@@ -14,9 +14,18 @@ export default function FAQ({ items = [] }) {
   return (
     <section className="section-pad bg-surface-2">
       <div className="container" style={{ maxWidth: 800 }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <span className="section-eyebrow">FAQ</span>
-          <h2 className="section-title">Common Questions</h2>
+        <div style={{ marginBottom: 40 }}>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 400,
+              fontSize:   'clamp(1.75rem, 3vw, 2.5rem)',
+              color:      'var(--color-text-heading)',
+              lineHeight: 1.1,
+            }}
+          >
+            Common Questions
+          </h2>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
